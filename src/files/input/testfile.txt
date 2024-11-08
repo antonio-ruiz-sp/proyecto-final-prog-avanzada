@@ -1,0 +1,23 @@
+This is an example of a file to be read
+
+
+It may not be long, but it is functional and will serve the purpose of 
+testing file operations.
+
+this is a new whole line.
+
+So is this one.
+Line n
+Line n+1
+
+Line n+2
+Line n+3
+Line n+4
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
+when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+It has survived not only five centuries, but also the leap into electronic typesetting, 
+remaining essentially unchanged. 
+It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, 
+and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+This is line 23 of the file.

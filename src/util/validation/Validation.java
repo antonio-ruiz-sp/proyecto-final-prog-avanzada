@@ -12,6 +12,9 @@ public final class Validation {
         if(args.length < 2 || (args[0]==null && args[1]==null)){
             result = true;
         }
+        //Check for first arg (arg[0]) to be String (file name + path) ending in .csv using regex
+        //also check for second arg to be an integer > 1 (number of partitions)
+        
         return true;
     }
 

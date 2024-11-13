@@ -9,3 +9,6 @@ src/files/synthetic_eeg_data_testv1.csv
 /src/files/output/testfile-part1.txt
 /src/files/output/testfile-part4.txt
 src/files/input/synthetic_eeg_data_testv.csv
+Python/eeg_specs.npy
+eeg_specs_combined.csv
+eeg_specs_combined.csv

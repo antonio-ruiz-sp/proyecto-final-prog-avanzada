@@ -1,0 +1,23 @@
+import numpy as np
+import pandas as pd
+
+# Cargar el archivo .npy con allow_pickle=True
+npy_path = "Python/eeg_specs.npy"
+data = np.load(npy_path, allow_pickle=True).item()
+
+# Inicializar una lista para almacenar los DataFrames
+df_list = []
+
+# Iterar sobre cada clave y su array correspondiente
+for key, array in data.items():
+    # Convertir el array en un DataFrame
+    df = pd.DataFrame(array.reshape(-1, 4))  # Aplana (128, 256, 4) a (32768, 4)
+    df['ID'] = key  # Añadir la clave como una columna identificadora
+    df_list.append(df)
+
+# Concatenar todos los DataFrames
+final_df = pd.concat(df_list, ignore_index=True)
+
+# Guardar como CSV
+final_df.to_csv("eeg_specs_combined.csv", index=False)
+print("Datos guardados en eeg_specs_combined.csv")

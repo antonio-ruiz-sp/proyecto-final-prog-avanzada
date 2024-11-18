@@ -1,0 +1,11 @@
+import pandas as pd
+
+# Cargar el archivo CSV
+csv_path = "eeg_specs_combined.csv"
+df = pd.read_csv(csv_path)
+
+# Contar filas por EEG_ID
+counts = df['EEG_ID'].value_counts()
+
+# Mostrar resultados
+print(counts)

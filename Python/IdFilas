@@ -1,0 +1,33 @@
+import pandas as pd
+
+# Cargar el archivo CSV resultante
+file_path = "eeg_specs_combined.csv"  # Cambiar si el archivo tiene un nombre o ruta diferente
+print("Cargando datos del CSV...")
+df = pd.read_csv(file_path)
+
+# Agregar una columna de bandera que indique dónde cambia el EEG_ID
+df['Change'] = df['EEG_ID'] != df['EEG_ID'].shift()
+
+# Obtener los índices donde hay cambios
+change_indices = df[df['Change']].index
+
+# Crear un DataFrame para almacenar las líneas alrededor del cambio
+rows_around_changes = []
+
+# Capturar 10 líneas antes y después de cada cambio
+for idx in change_indices:
+    start_idx = max(idx - 10, 0)  # Evitar índices negativos
+    end_idx = min(idx + 10, len(df) - 1)  # Evitar exceder el tamaño del DataFrame
+    rows_around_changes.append(df.iloc[start_idx:end_idx + 1])
+
+# Concatenar todas las líneas seleccionadas
+changes_df = pd.concat(rows_around_changes).drop_duplicates()
+
+# Mostrar las líneas alrededor de los cambios
+print("Mostrando las líneas alrededor de los cambios de paciente:")
+pd.set_option('display.max_rows', None)  # Mostrar todas las filas seleccionadas
+print(changes_df)
+
+# Guardar las líneas relevantes en un archivo CSV para inspección adicional
+changes_df.to_csv("eeg_changes_inspection.csv", index=False)
+print("Líneas alrededor de los cambios guardadas en eeg_changes_inspection.csv")

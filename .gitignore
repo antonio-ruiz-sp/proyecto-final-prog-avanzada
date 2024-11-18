@@ -12,3 +12,4 @@ src/files/input/synthetic_eeg_data_testv.csv
 Python/eeg_specs.npy
 eeg_specs_combined.csv
 eeg_specs_combined.csv
+eeg_changes_inspection.csv

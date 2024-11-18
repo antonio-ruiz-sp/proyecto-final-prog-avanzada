@@ -1,0 +1,39 @@
+import numpy as np
+import pandas as pd
+
+# Ruta del archivo NPY
+npy_path = "Python/eeg_specs.npy"
+
+# Cargar el archivo .npy
+print("Cargando el archivo .npy...")
+data = np.load(npy_path, allow_pickle=True).item()
+
+# Inicializar una lista para almacenar los DataFrames
+df_list = []
+
+# Iterar sobre cada clave y su array correspondiente
+print("Procesando las claves y sus arrays...")
+for i, (key, array) in enumerate(data.items()):
+    if array.shape != (128, 256, 4):  # Verificar la forma esperada
+        print(f"Advertencia: la clave {key} tiene forma inesperada {array.shape}.")
+        continue  # Saltar arrays con forma inesperada
+
+    # Convertir el array en un DataFrame
+    df = pd.DataFrame(array.reshape(-1, 4), columns=['Frequency', 'Time', 'Montage1', 'Montage2'])
+    df['EEG_ID'] = key  # Añadir la clave como una columna identificadora
+    df_list.append(df)
+
+    # Progreso
+    if (i + 1) % 500 == 0:
+        print(f"Procesados {i + 1}/{len(data)} registros...")
+
+# Concatenar todos los DataFrames
+print("Concatenando DataFrames...")
+final_df = pd.concat(df_list, ignore_index=True)
+
+# Guardar como CSV
+output_path = "eeg_specs_combined.csv"
+print(f"Guardando los datos en {output_path}...")
+final_df.to_csv(output_path, index=False)
+
+print("Proceso completado. Datos guardados en eeg_specs_combined.csv")

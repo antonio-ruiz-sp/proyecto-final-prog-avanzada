@@ -9,3 +9,4 @@ src/files/synthetic_eeg_data_testv1.csv
 /src/files/output/testfile-part1.txt
 /src/files/output/testfile-part4.txt
 src/files/input/synthetic_eeg_data_testv.csv
+/src/files/input/new-shortCSVFileVersion.csv

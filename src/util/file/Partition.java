@@ -4,13 +4,14 @@ import java.io.File;
 import model.worker_manager.Manager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import util.json.JsonUtil;
 
 public class Partition {
     private static Logger logger = LogManager.getLogger(Partition.class);
     String partName;
     int begin;
     int end;
-    Manager m;
+    Manager mgr;
     File origFile;
     String destfileName;
     String regex;
@@ -19,7 +20,7 @@ public class Partition {
         this.partName = partName;
         this.begin = begin;
         this.end = end;
-        this.m = m;
+        this.mgr = m;
         this.origFile = origFile;
         this.destfileName = destFileName;
         this.regex = regex;
@@ -27,17 +28,19 @@ public class Partition {
     }
     @Override
     public String toString(){
+        /*
         StringBuilder sb = new StringBuilder();
         sb.append("partition id: ").append(partName).append("\n");
         sb.append("       begin:").append(begin).append("\n");
         sb.append("         end:").append(end).append("\n");
         sb.append("destFileName: ").append(destfileName).append("\n");
-        return sb.toString();
+        return sb.toString();*/
+        return JsonUtil.toJsonRepresentation(this);
     }
 
     void startWork() {
         logger.debug("Entering startWork... for "+ this.partName);
-        m.submitTask(this);
+        mgr.submitTask(this);
     }
 
     public String getPartName() {
@@ -65,11 +68,11 @@ public class Partition {
     }
 
     public Manager getM() {
-        return m;
+        return mgr;
     }
 
     public void setM(Manager m) {
-        this.m = m;
+        this.mgr = m;
     }
 
     public File getOrigFile() {

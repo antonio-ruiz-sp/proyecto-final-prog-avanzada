@@ -22,7 +22,7 @@ public final class FileUtil {
     
     private static final Logger logger = LogManager.getLogger(FileUtil.class);
     private static final int availableProcessors = Runtime.getRuntime().availableProcessors();
-    private static Stream<String> fileStream;
+    //private static Stream<String> fileStream;
     
     public static boolean fileExists(File f){
         return f.exists();
@@ -32,14 +32,11 @@ public final class FileUtil {
         //int numberOfLinesInOrigFile = -1;
         long numLinesOrigFile = -1;
         //Assumes File exists
-        logger.debug( "file path: " + f.getAbsolutePath());
-        logger.debug(" file name: "+ f.getName());
+        //logger.debug( "file path: " + f.getAbsolutePath());
+        //logger.debug(" file name: "+ f.getName());
         //BufferedWriter archivoDestino = null;
-        /*
-        try(//LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(f));
-                BufferedReader archivoOrigen = new BufferedReader(new FileReader(f));
-                ) {*/
-        try{
+        
+        try(Stream<String> fileStream = Files.lines(Paths.get(f.getAbsolutePath())) ) {
             /* method 1
             //Skip to last line
             lineNumberReader.skip(Integer.MAX_VALUE);
@@ -48,35 +45,18 @@ public final class FileUtil {
             //final int numberOfLinesInNewFiles = numberOfLinesInOrigFile/numFiles;
             */
             
-            //second method of counting lines in orig file:
-            
-            fileStream = Files.lines(Paths.get(f.getAbsolutePath())) ;
+            //second method of counting lines in orig file
+            //fileStream = Files.lines(Paths.get(f.getAbsolutePath())) ;
             //Lines count
             numLinesOrigFile = (int) fileStream.count();
             
             logger.debug("number of lines in file (numLinesOrigFile using Stream): "+ numLinesOrigFile);
-            
-            //logger.debug("number of lines in file (numberOfLinesInOrigFile): "+ numberOfLinesInOrigFile);
-            //exit(1);
-
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
             logger.error("Error FNFE:" + ex.getMessage());
         } catch (IOException ex) {
             ex.printStackTrace();
             logger.error("Error IOE: "+ex.getMessage());
-        }finally{
-            //do something, like closing resources
-            /*
-            if(archivoDestino != null){
-                try {
-                    archivoDestino.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    logger.error( "Error: "+ex.getMessage());
-                }
-            }*/
-            fileStream.close();
         }    
         //return numberOfLinesInOrigFile;
         return numLinesOrigFile;
@@ -86,12 +66,12 @@ public final class FileUtil {
             String newDelimiter, boolean skipDelimiterInsideDoubleQuotes, 
             int numPartitions){
         
-        logger.info("***********************************************************************");
+        logger.info("*************************************************************************");
         logger.info("* Entering replaceDelimiterInCSVFile(File, String, String, boolean, int) ");
         logger.debug("* skip commas in DoubleQuotes: " + skipDelimiterInsideDoubleQuotes);
-        logger.debug("+               numPartitions: " + numPartitions);
+        logger.debug("*               numPartitions: " + numPartitions);
         logger.debug("* file Name: " + origFile.getAbsolutePath());
-        logger.info("***********************************************************************");
+        logger.info("*************************************************************************");
 
         String destFileName = "src/files/input/"+ origFile.getName().split("\\.")[0];//tempFileWithPipes";
         //File destFile = new File(destFileName);
@@ -114,8 +94,8 @@ public final class FileUtil {
         for(int p=0; p < numPartitions; p++){
             
             String partName = "partition-"+p;
-            logger.debug("partition name: "+partName);
-            //    public Partition(String partName,int begin, int end, Manager m, File origFile, String destfileName) {
+            // logger.debug("partition name: "+partName);
+            // public Partition(String partName,int begin, int end, Manager m, File origFile, String destfileName) {
             Partition partition = new Partition(partName, partStart, (partStart + partitionSizeInLines), manager, origFile, (destFileName+"-part-"+p+".csv"),regex);
             partStart += (partitionSizeInLines + 1);//so next iteration won't overlap with previous partition
             //logger.debug("adding partition: "+partition+" to List of partitions...");
@@ -123,7 +103,8 @@ public final class FileUtil {
             partitionsList.add(partition);
             
         }
-        logger.debug("partitions list(plan) : \n" + partitionsList.toString());
+        logger.debug("partition list(plan) ["+partitionsList.size()+" count] : ");
+        partitionsList.forEach(p-> logger.debug(p));
         //In parallel execute the partitions work
         partitionsList.parallelStream()
                 .forEach(p-> {logger.debug("start work: "+p.getPartName());p.startWork();});
@@ -183,7 +164,7 @@ public final class FileUtil {
         logger.info("Entering replaceDelimiterInCSVFile... \nskipDelimiterInsideDoubleQuotes: " + skipDelimiterInsideDoubleQuotes);
         logger.debug("fileName: " + origFile.getAbsolutePath());
         String origFileName = origFile.getName();
-        String destFileName = "src/files/input/tempFileWithPipes";
+        String destFileName = "src/files/input/"+origFile.getName().split("\\.");
         
         //find commas outside double quotes only
         String regex = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";

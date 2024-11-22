@@ -1,6 +1,7 @@
 package model.file;
 
 import model.enums.Column_Data_Type;
+import util.json.JsonUtil;
 
 public class Column {
     String name;
@@ -36,8 +37,7 @@ public class Column {
     
     @Override
     public String toString(){
-        String columnFormat = "Name: %s \t Col. Number: %d \t  (type: %s)";
-        return String.format(columnFormat, name, columnNo, type);
+        return JsonUtil.toJsonRepresentation(this);
     }
 }
 

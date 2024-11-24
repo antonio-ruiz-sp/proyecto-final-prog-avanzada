@@ -24,8 +24,19 @@ public class Partition {
         this.origFile = origFile;
         this.destfileName = destFileName;
         this.regex = regex;
+    }
+    
+    public Partition(String partName, int begin, int end, File origFile, String destFileName, String regex) {
+        this.partName = partName;
+        this.begin = begin;
+        this.end = end;
+        //this.mgr = m;
+        this.origFile = origFile;
+        this.destfileName = destFileName;
+        this.regex = regex;
         
     }
+    
     @Override
     public String toString(){
         /*
@@ -39,7 +50,7 @@ public class Partition {
     }
 
     void startWork() {
-        logger.debug("Entering startWork... for "+ this.partName);
+        //logger.debug("Entering startWork... for "+ this.partName);
         mgr.submitTask(this);
     }
 
@@ -67,11 +78,11 @@ public class Partition {
         this.end = end;
     }
 
-    public Manager getM() {
+    public Manager getMgr() {
         return mgr;
     }
 
-    public void setM(Manager m) {
+    public void setMgr(Manager m) {
         this.mgr = m;
     }
 

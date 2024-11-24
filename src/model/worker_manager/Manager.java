@@ -1,7 +1,8 @@
 package model.worker_manager;
 
-import java.io.File;
 import java.lang.Thread.Builder;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import util.file.Partition;
@@ -10,6 +11,8 @@ public class Manager {
     Logger logger = LogManager.getLogger(Manager.class);
     
     int numWorkers;
+    Map<String, PersonalInfo> personalInfoMap;
+    Map<String, EEG> EEGMap;
 
     public int getNumWorkers() {
         return numWorkers;
@@ -21,7 +24,8 @@ public class Manager {
     public Manager(int numberOfWorkers) {  
         this.numWorkers = numberOfWorkers;
         vtBuilder = Thread.ofVirtual().name("worker-", 0);
-        
+        personalInfoMap = new ConcurrentHashMap<>();
+        EEGMap = new ConcurrentHashMap<>();
         /*
         //executor = Executors.newFixedThreadPool(numberOfWorkers);  
         //executor = Executors.newVirtualThreadPerTaskExecutor();
@@ -37,11 +41,20 @@ public class Manager {
             java.util.logging.Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
         }*/
     }
-
+/*
+    public void submitTask(int line){
+        logger.info("Entering submitTask(int line) where line= "+ line);
+        Thread vt = vtBuilder.start(()->{});
+        
+    }
+*/
+    
     public void submitTask(Partition p) {  
         logger.info("Entering submitTask(worker)..." + p.getPartName());
-        Worker worker = new Worker(p.getPartName(), p.getOrigFile(), new File(p.getDestfileName()), 
-                p.getBegin(), p.getEnd(), p.getRegex() );  
+        /*Worker worker = new Worker(p.getPartName(), p.getOrigFile(), new File(p.getDestfileName()), 
+                p.getBegin(), p.getEnd(), p.getRegex() );
+        */
+        Worker worker = new Worker(p, personalInfoMap, EEGMap);
         //logger.debug(p.getPartName()+ " worker created...and before start()");
         Thread vt = vtBuilder.start(worker);
         try {
@@ -49,7 +62,7 @@ public class Manager {
         } catch (InterruptedException ex) {
             logger.error("Exception in submitTask(Partition): " + ex.getMessage());
         }
-        logger.debug("task "+ vt.getName()+" completed!");
+        //logger.debug("task "+ vt.getName()+" completed!");
         
         /*
         //Future<?> f = executor.submit(worker);

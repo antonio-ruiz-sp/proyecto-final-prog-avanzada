@@ -53,7 +53,7 @@ public class ProyectoFinalProgAvanzada{
             String originalFileName = args[0];
             
             
-            MainMenuJFrame menu = new MainMenuJFrame();//.setVisible(true);
+            //MainMenuJFrame menu = new MainMenuJFrame();//.setVisible(true);
             /*
             JLabel fileNameLbl = new JLabel("File:");
             fileNameLbl.setName("fileNameLbl");
@@ -83,8 +83,8 @@ public class ProyectoFinalProgAvanzada{
             
             */
             
-            menu.setVisible(true);
-            menu.setAlwaysOnTop(true);
+            //menu.setVisible(true);
+            //menu.setAlwaysOnTop(true);
             
             //logger.debug("menu: "+menu);
             //menu.getcom
@@ -95,11 +95,20 @@ public class ProyectoFinalProgAvanzada{
             //componentsMenu.toList()
             //Streammenu.getContentPane().getComponents
             
-            exit(1);
+            //exit(1);
             //transform file i.e change comma to pipe and keep commas inside double quotes
-            FileUtil.replaceDelimiterInCSVFile(new File(originalFileName), ",", "|", true, numPartitions );
+            //FileUtil.replaceDelimiterInCSVFile(new File(originalFileName), ",", "|", true, numPartitions );
+//public static void replaceDelimiterFirstNColumns(File origFile, String oldDelimiter, String newDelimiter, int firstNColumns){
+            //FileUtil.replaceDelimiterFirstNColumnsAndSplitFile(originalFileName, originalFileName, numPartitions);
+            //public static void splitFileInColumns(File origFile, String oldDelimiter, String newDelimiter, int firstNColumns) {
+            File origFile = new File(originalFileName);
+            //find commas outside double quotes only
+            String regex = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
+
             
-            exit(0); //stop here to test divide file and replacement of delimiter
+            FileUtil.splitFileInColumns( origFile, ",", "|", 8,regex);
+            
+            exit(1); //stop here to test divide file and replacement of delimiter
             
             proyecto.originalFile = new CSVFile(args[0]);
             if(!CSVFile.isCSVFile(proyecto.originalFile)){

@@ -50,7 +50,6 @@ public class Partition {
     }
 
     void startWork() {
-        //logger.debug("Entering startWork... for "+ this.partName);
         mgr.submitTask(this);
     }
 

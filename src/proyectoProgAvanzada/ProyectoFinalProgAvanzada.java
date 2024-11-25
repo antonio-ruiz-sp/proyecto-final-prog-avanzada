@@ -1,9 +1,14 @@
 package proyectoProgAvanzada;
+import gui.MainMenuJFrame;
 import java.io.File;
 import static java.lang.System.exit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 import model.menu.Menu;
 import model.statistics.Statistics;
 import model.file_object.PersonalInfo;
@@ -37,8 +42,8 @@ public class ProyectoFinalProgAvanzada{
             String originalFileName = args[0];
             
             
-            //MainMenuJFrame menu = new MainMenuJFrame();//.setVisible(true);
-            /*
+            MainMenuJFrame menu = new MainMenuJFrame();//.setVisible(true);
+            
             JLabel fileNameLbl = new JLabel("File:");
             fileNameLbl.setName("fileNameLbl");
             //JTextField fileNameTxt = new JTextField( originalFileName );
@@ -60,14 +65,14 @@ public class ProyectoFinalProgAvanzada{
 
             //menu.setLayout(new javax.swing.GroupLayout(menu));
             menu.setSize(300,200);
-            menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            menu.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             menu.setVisible(true);
             
             logger.debug("now what?");
             
-            */
             
-            //menu.setVisible(true);
+            
+            menu.setVisible(true);
             //menu.setAlwaysOnTop(true);
             
             //logger.debug("menu: "+menu);

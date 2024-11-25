@@ -1,15 +1,10 @@
 package proyectoProgAvanzada;
-import javax.swing.*;
-import gui.MainMenuJFrame;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
 import static java.lang.System.exit;
 import java.util.List;
 import java.util.stream.Stream;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 import model.file.type.CSVFile;
 import model.statistics.Statistics;
 import org.apache.logging.log4j.LogManager;
@@ -29,19 +24,7 @@ public class ProyectoFinalProgAvanzada{
         this.availableProcessors = java.lang.Runtime.getRuntime().availableProcessors();
         
     }
-    
-    
-    private Component getComponentByName(Component[] container, String cName){
-        Component c = null;
-        Stream<Component> componentsMenu = Stream.of(container);
-        logger.debug("components: "+container.length);
-        for(Component com: container){
-            logger.debug("Component:"+com.getName()==null?"Null":com.toString());
-        }
-        //c = componentsMenu.filter(obj -> obj.getName().equals(cName)).findFirst().get();  //findFirst().get();
-        logger.debug("Found component: "+ c);
-        return c;
-    } 
+     
     
     public static void main(String[] args) {
         logger.info("Entering main...");
@@ -98,7 +81,7 @@ public class ProyectoFinalProgAvanzada{
             //exit(1);
             //transform file i.e change comma to pipe and keep commas inside double quotes
             //FileUtil.replaceDelimiterInCSVFile(new File(originalFileName), ",", "|", true, numPartitions );
-//public static void replaceDelimiterFirstNColumns(File origFile, String oldDelimiter, String newDelimiter, int firstNColumns){
+            //public static void replaceDelimiterFirstNColumns(File origFile, String oldDelimiter, String newDelimiter, int firstNColumns){
             //FileUtil.replaceDelimiterFirstNColumnsAndSplitFile(originalFileName, originalFileName, numPartitions);
             //public static void splitFileInColumns(File origFile, String oldDelimiter, String newDelimiter, int firstNColumns) {
             File origFile = new File(originalFileName);
@@ -108,7 +91,12 @@ public class ProyectoFinalProgAvanzada{
             
             FileUtil.splitFileInColumns( origFile, ",", "|", 8,regex);
             
+            
+            
+            
+            
             exit(1); //stop here to test divide file and replacement of delimiter
+            
             
             proyecto.originalFile = new CSVFile(args[0]);
             if(!CSVFile.isCSVFile(proyecto.originalFile)){
@@ -119,6 +107,7 @@ public class ProyectoFinalProgAvanzada{
             //ProyectoFinalProgAvanzada project = new ProyectoFinalProgAvanzada();
             logger.info("Passed file validations.Proceed! ...");
             
+            /*
             try {
                 proyecto.archivos = FileUtil.divideArchivo(proyecto.originalFile , numPartitions);
             } catch (FileNotFoundException ex) {
@@ -128,7 +117,7 @@ public class ProyectoFinalProgAvanzada{
             for(File f: proyecto.archivos){
                 logger.debug("File: "+ f.getName() );
             }
-            
+            */
         }else{
             logger.info("invalid user input...");
             Validation.showUsage();

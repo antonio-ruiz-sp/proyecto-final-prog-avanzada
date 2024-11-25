@@ -37,20 +37,9 @@ public final class FileUtil {
         //logger.debug( "file path: " + f.getAbsolutePath());
         //logger.debug(" file name: "+ f.getName());
         
-        try(Stream<String> fileStream = Files.lines(Paths.get(f.getAbsolutePath())) ) {
-            /* method 1
-            //Skip to last line
-            lineNumberReader.skip(Integer.MAX_VALUE);
-
-            numberOfLinesInOrigFile = lineNumberReader.getLineNumber() + 1;
-            //final int numberOfLinesInNewFiles = numberOfLinesInOrigFile/numFiles;
-            */
-            
+        try(Stream<String> fileStream = Files.lines(Paths.get(f.getAbsolutePath())) ) { 
             //second method of counting lines in orig file
-            //fileStream = Files.lines(Paths.get(f.getAbsolutePath())) ;
-            //Lines count
             numLinesOrigFile = (int) fileStream.count();
-            
             logger.debug("number of lines in file (numLinesOrigFile using Stream): "+ numLinesOrigFile);
         } catch (FileNotFoundException ex) {
             logger.error("Error FNFE:" + ex.getMessage());
@@ -100,14 +89,9 @@ public final class FileUtil {
             
             String partName = "partition-"+p;
             // logger.debug("partition name: "+partName);
-            //            public Partition(String partName, int begin, int end, Manager m, File origFile, String destFileName, String regex) {
             Partition partition = new Partition(partName, partStart, (partStart + partitionSizeInLines ), manager, origFile, (destFileName+"-vpart-"+p+".csv"),regex);
             partStart += (partitionSizeInLines + 1);//so next iteration won't overlap with previous partition
-            //logger.debug("adding partition: "+partition+" to List of partitions...");
-            //partition.startWork();
-            partitionsList.add(partition);
-            //break;
-            
+            partitionsList.add(partition);            
         }
         logger.debug("partition list(plan) ["+partitionsList.size()+" count] : ");
         partitionsList.forEach(p-> logger.debug(p));
@@ -125,66 +109,7 @@ public final class FileUtil {
         
         Instant end = Instant.now();
         Duration duration = Duration.between(begin, end);
-        logger.info("Duration of completing all partitions: " + duration.toMillis() +" [ms];" + duration.toSeconds()+"[s]; "+ duration.toMinutes()+" [mins].");        
-        /*
-        //Stream<String> fileStream;
-        try(Stream<String> fileStream = Files.lines(Paths.get(origFile.getAbsolutePath())) ;
-                ProgressBar pb = new ProgressBar("Splitting line:", linesInFile )
-                
-                ) {
-            int testCounter = 0;
-            fileStream.forEach(l -> {
-                try {
-                     //1.no.
-                     //2.sex
-                     //3.age
-                     //4.eeg date
-                     //5.education level
-                     //6.IQ
-                     //7.main.disorder
-                     //8.specific.disorder
-                     //9.EEG_ELEKTROT_1
-                    Thread vtPersonalDataPlusOneEEG = vtBuilder.start(()->{
-                        logger.debug("Thread ID: " + Thread.currentThread().threadId());
-                        String newLine = l.
-                                replaceFirst(",","|"). //no.
-                                replaceFirst(",","|"). //sex
-                                replaceFirst(",","|"). //age
-                                replaceFirst(",","|"). //eeg.date
-                                replaceFirst(",","|"). //education
-                                replaceFirst(",","|"). //IQ
-                                replaceFirst(",","|"). //main.disorder
-                                replaceFirst(",","|"). //specific.disorder
-                                replaceFirst(regex,"|"); //EEG_Elektrot_1
-                        //logger.debug("newLine: "+ newLine);
-                        
-                        pb.step();
-                        
-                    });
-                    
-                    vtPersonalDataPlusOneEEG.join();
-                } catch (InterruptedException ex) {
-                    java.util.logging.Logger.getLogger(FileUtil.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
-            });
-            
-            
-            
-            //logger.debug("number of lines in file (numLinesOrigFile using Stream): "+ numLinesOrigFile);
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-            logger.error("Error FNFE:" + ex.getMessage());
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            logger.error("Error IOE: "+ex.getMessage());
-        }
-        
-        Instant end = Instant.now();
-        Duration duration = Duration.between(begin, end);
-        logger.info("Duration:  " + duration.toMillis() +" [ms];" + duration.toSeconds()+"[s]; "+ duration.toMinutes()+" [mins].");
-        */
-        
+        logger.info("Duration of completing all partitions: " + duration.toMillis() +" [ms];" + duration.toSeconds()+"[s]; "+ duration.toMinutes()+" [mins].");                
         
     }
     
@@ -251,47 +176,6 @@ public final class FileUtil {
         
         manager.shutdown();
         
-        /*
-        //String output = null;
-        String linea = null;
-        //File tempFile = new File(fileName);
-        Instant start_replace = Instant.now();
-        BufferedWriter archivoDestino = null;
-        try(BufferedReader archivoOrigen = new BufferedReader(new FileReader(origFile))){
-            File tempFile = new File(destFileName);
-            if(!tempFile.exists()){
-                logger.info("File does not exist, creating file :"+ tempFile.getName());
-                tempFile.createNewFile();
-            }
-            int lineCounter = 0;
-            archivoDestino = new BufferedWriter(new FileWriter(tempFile));
-            while((linea = archivoOrigen.readLine()) != null ){
-                //tempFile = new File("src/files/input/new-"+fileName );
-                
-                
-                String newLine = linea.replaceAll(regex, "|");
-                if(lineCounter<10)
-                    logger.debug("pipe-separated new line: " + newLine);
-                archivoDestino.write(newLine + "\n");
-                lineCounter++;   
-            }
-        } catch (FileNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FileUtil.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(FileUtil.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            //do something, like closing resources
-            if(archivoDestino != null){
-                try {
-                    archivoDestino.close();
-                } catch (IOException ex) {
-                    logger.error( ex.getMessage());
-                }
-            }
-        }
-        
-        */
-        
         Instant end_replace = Instant.now();
         Duration duration = Duration.between(start_replace, end_replace);
         logger.info("Duration of replacing old delimiter ("+oldDelimiter+") "
@@ -324,7 +208,6 @@ public final class FileUtil {
             while((linea = archivoOrigen.readLine()) != null ){
                 //tempFile = new File("src/files/input/new-"+fileName );
                 
-                
                 String newLine = linea.replaceAll(regex, "|");
                 if(lineCounter<10)
                     logger.debug("pipe-separated new line: " + newLine);
@@ -350,95 +233,7 @@ public final class FileUtil {
         logger.info("Duration: " + duration.toMillis() +" [ms]" + duration.toMinutes()+" [mins]");
   
     }
-    
-    public static List<File> divideArchivo(File f, int numFiles) throws FileNotFoundException {
-        logger.info("Entering divideArchivo...");
-        List<File> files = new ArrayList<File>();
         
-        if(f.exists()){
-            logger.debug( "file path: " + f.getAbsolutePath());
-            logger.debug("file name: "+ f.getName());
-            long numberOfLinesInOrigFile = numLines(f);
-            
-            /*
-            BufferedWriter archivoDestino = null;
-            try(LineNumberReader lineNumberReader = new LineNumberReader(new FileReader(f));
-                    BufferedReader archivoOrigen = new BufferedReader(new FileReader(f));
-                    ) {
-                //Skip to last line
-                lineNumberReader.skip(Integer.MAX_VALUE);
-                
-                //final int numberOfLinesInOrigFile = lineNumberReader.getLineNumber() + 1;
-                
-                final double numberOfLinesInNewFiles = numberOfLinesInOrigFile/numFiles;
-                
-                //second method of counting lines in orig file:
-                long numLinesOrigFile = -1;
-                try (Stream<String> fileStream = Files.lines(Paths.get(f.getName()))) {
-                    //Lines count
-                    numLinesOrigFile = (int) fileStream.count();
-                }
-                
-                logger.debug("number of lines in file (numberOfLinesInOrigFile): "+ numberOfLinesInOrigFile);
-                logger.debug("number of lines in file (numLinesOrigFile): "+ numLinesOrigFile);
-                //TO-DO: write code here to split the file using Virtual Threads
-                logger.debug("There should be "+ numFiles +" files with " 
-                        + numberOfLinesInNewFiles + " lines each ");
-                
-                // write code here for splitting file into numFiles # of files using Virtual Threads
-                //non-thread implementation
-                //BufferedReader archivoOrigen = new BufferedReader(new FileReader(f));
-                
-                String linea;
-                int currLine = 0;
-                int currFile = 1;
-                //String fileBaseName= f.getName();
-                File tempFile = new File("dummy");
-                //archivoDestino = new BufferedWriter(new FileWriter(tempFile));
-                while((linea = archivoOrigen.readLine()) != null && (currLine <= numberOfLinesInOrigFile)  ){
-                    if(currLine%numberOfLinesInNewFiles ==0){
-                        String fileName = f.getName();
-                        String delimiter = "\\.";
-                        
-                        String[] fileParts = fileName.split(delimiter);
-                        logger.debug("fileParts: " + Arrays.toString(fileParts));
-                        String fileNameNoExt = fileParts[0];
-                        String fileNameExt = fileParts[1];
-                        tempFile = new File("src/files/output/"+ fileNameNoExt+"-part" +currFile +"."+fileNameExt);
-                        archivoDestino = new BufferedWriter(new FileWriter(tempFile));
-                        logger.info("Temp file: "+ tempFile.getAbsolutePath());
-                        files.add(tempFile);
-                        currFile++;        
-                    }
-                    logger.debug("Current line: " +linea);
-                    archivoDestino.write(linea + "\n");
-                    //BufferedWriter archivoDestino = new BufferedWriter(new FileWriter());
-                    currLine++;
-                }
-                
-            } catch (FileNotFoundException ex) {
-                logger.error(ex.getMessage());
-            } catch (IOException ex) {
-                logger.error(ex.getMessage());
-            }finally{
-                //do something, like closing resources
-                if(archivoDestino != null){
-                    try {
-                        archivoDestino.close();
-                    } catch (IOException ex) {
-                        logger.error( ex.getMessage());
-                    }
-                }
-            }*/
-            
-        }else{
-            logger.error("File does not exist: " + f.getName());
-            throw (new FileNotFoundException(f.getName()));
-        }
-        logger.info("exiting divideArchivo...");
-        return files;
-    }
-    
     public static String[] readFirstNLinesofFile(File f, int n, boolean skipEmptyLines){
         String[] result = new String[n];
         int numLinesRead = 0;

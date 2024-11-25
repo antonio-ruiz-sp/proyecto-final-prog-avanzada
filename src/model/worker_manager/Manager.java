@@ -41,16 +41,9 @@ public class Manager {
             java.util.logging.Logger.getLogger(Manager.class.getName()).log(Level.SEVERE, null, ex);
         }*/
     }
-/*
-    public void submitTask(int line){
-        logger.info("Entering submitTask(int line) where line= "+ line);
-        Thread vt = vtBuilder.start(()->{});
-        
-    }
-*/
     
     public void submitTask(Partition p) {  
-        logger.info("Entering submitTask(worker)..." + p.getPartName());
+        //logger.info("Entering submitTask(worker)..." + p.getPartName());
         /*Worker worker = new Worker(p.getPartName(), p.getOrigFile(), new File(p.getDestfileName()), 
                 p.getBegin(), p.getEnd(), p.getRegex() );
         */
@@ -74,32 +67,10 @@ public class Manager {
             logger.error(ex.getMessage());
         }
         */
-        logger.info("Exiting submitTask");
+        //logger.info("Exiting submitTask");
     }  
     
-    /*
-    public Manager(int numWorkers) {
-        logger.debug("Entered constructor...");
-        this.numWorkers = numWorkers;
-        logger.debug("Manager creates workers");
-        for(int i=0; i<numWorkers; i++){
-            logger.debug("creating new worker...");
-            Worker worker = new Worker(taskQueue);
-            new Thread(worker).start();
-            logger.debug("worker "+ i +"created");
-        }
-        logger.debug("Manager creates tasks");
-        for(int i=0; i<){
-            
-        }
-        
-        logger.debug("Exit constructor...");
-    }
     
-    void doConcurrentWork() {
-        
-    }*/
-
     public void shutdown() {
         //executor.shutdown();
         vtBuilder = null;

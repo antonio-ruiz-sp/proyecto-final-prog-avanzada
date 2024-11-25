@@ -13,8 +13,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import model.worker_manager.Manager;
+import model.worker_manager.PersonalInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,10 +24,9 @@ public final class FileUtil {
     
     private static final Logger logger = LogManager.getLogger(FileUtil.class);
     private static final int availableProcessors = Runtime.getRuntime().availableProcessors();
-    //private static Stream<String> fileStream;
     private static Thread.Builder vtBuilder = Thread.ofVirtual().name("vertical-partition",0);
+    //public static Manager manager;
 
-    
     public static boolean fileExists(File f){
         return f.exists();
     }
@@ -57,7 +58,7 @@ public final class FileUtil {
     * 1: A file with the 1,147 row split in first file with newDelimiter as separator
     * 2: A second file with the same 1,147 rows with the complimentary file contents as one line and the primary column duplicated per record
     */    
-    public static void splitFileInColumns(File origFile, String oldDelimiter, String newDelimiter, int firstNColumns, String regex) {
+    public static Map<String, PersonalInfo> splitFileInColumns(File origFile, String oldDelimiter, String newDelimiter, int firstNColumns, String regex) {
         logger.info("*************************************************************************");
         logger.info("* Entering splitFileInColumns(File origFile, String oldDelimiter, String newDelimiter, int firstNColumns, String regex)");
         logger.debug("*    firstNColumns: " + firstNColumns);
@@ -72,7 +73,7 @@ public final class FileUtil {
         String destFileNamePersonalInfo = destFileName + "-PersonalInfo";
         int linesInFile = (int)numLines(origFile);
         
-        int numPartitions = 8;
+        int numPartitions = 100; //for developing and testing. Set back to 8
         long parFileSizeInLines = -1;
         //Instant start_replace = Instant.now();
         //Manager manager = new Manager(availableProcessors * 1000 ); //fine tune this parameter
@@ -91,7 +92,8 @@ public final class FileUtil {
             // logger.debug("partition name: "+partName);
             Partition partition = new Partition(partName, partStart, (partStart + partitionSizeInLines ), manager, origFile, (destFileName+"-vpart-"+p+".csv"),regex);
             partStart += (partitionSizeInLines + 1);//so next iteration won't overlap with previous partition
-            partitionsList.add(partition);            
+            partitionsList.add(partition);      
+            break;
         }
         logger.debug("partition list(plan) ["+partitionsList.size()+" count] : ");
         partitionsList.forEach(p-> logger.debug(p));
@@ -101,16 +103,19 @@ public final class FileUtil {
         partitionsList.parallelStream()
                 .forEach(p-> {logger.debug("start work: "+p.getPartName());p.startWork();});
         
-        manager.shutdown();
+        //manager.shutdown();
         
         //=======================================
         //Now do work!!!
-        
-        
+        //manager.getPersonalInfoMap().get("2").getFirstEEG().displayGraphics();
+        /*
+        PersonalInfo pi = manager.getPersonalInfoMap().get("2");//.getFirstEEG()
+        pi.getFirstEEG().displayGraphics();
+        */
         Instant end = Instant.now();
         Duration duration = Duration.between(begin, end);
         logger.info("Duration of completing all partitions: " + duration.toMillis() +" [ms];" + duration.toSeconds()+"[s]; "+ duration.toMinutes()+" [mins].");                
-        
+        return manager.getPersonalInfoMap();
     }
     
 

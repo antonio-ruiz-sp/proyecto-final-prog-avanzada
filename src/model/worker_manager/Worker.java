@@ -125,10 +125,7 @@ public class Worker implements Runnable {
                             //write to two logs, while saving info into Java objects i.e ConcurrentHashMap
                             archivoDestinoPersonal.write(personalInfoStr+"\n");
                             archivoDestinoEEG.write(EEGLine+"\n");
-                            //Write to DataStructures in java. At least the personal info + first EEG
-                            //logger.debug("no. :"+recordNumber);
-                            //recordNumber = recordNumber.substring(0, recordNumber.indexOf("|"));//recordNumber has a pipe at the end at this point, this must be stripped to convert to Integer
-                            //String[] piArray = personalInfoStr.split("|");
+                            
                             //0-no, 1-sex, 2-age, 3-eeg.date, 4-education, 5-IQ, 6-main.disorder, 7-specific.disorder, 8- EEG_Elektrot_1
                             personalInfoMap.computeIfAbsent(recordNumber, pInfo->{
                                 //PersonalInfo(String no, String sex, int age, String eegDate, String education, int IQ, String mainDisorder, String specificDisorder, String EEGString) {

@@ -6,7 +6,7 @@ import java.util.Objects;
  *
  * @author antonio.ruiz
  */
-class PersonalInfo {
+public class PersonalInfo {
     private String no;
     private String sex;
     private int age;

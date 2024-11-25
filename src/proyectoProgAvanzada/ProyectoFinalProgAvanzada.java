@@ -1,18 +1,19 @@
 package proyectoProgAvanzada;
-import java.awt.Component;
 import java.io.File;
-import java.io.FileNotFoundException;
 import static java.lang.System.exit;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Stream;
-import model.file.type.CSVFile;
+import java.util.Map;
+import model.menu.Menu;
 import model.statistics.Statistics;
+import model.worker_manager.PersonalInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import util.file.FileUtil;
 import util.validation.Validation;
 
 public class ProyectoFinalProgAvanzada{
+
+    //private Map<String, PersonalInfo> personalInfo;
     private File originalFile = null;
     private List<File> archivos = null;
     private Statistics stats;
@@ -80,44 +81,15 @@ public class ProyectoFinalProgAvanzada{
             
             //exit(1);
             //transform file i.e change comma to pipe and keep commas inside double quotes
-            //FileUtil.replaceDelimiterInCSVFile(new File(originalFileName), ",", "|", true, numPartitions );
-            //public static void replaceDelimiterFirstNColumns(File origFile, String oldDelimiter, String newDelimiter, int firstNColumns){
-            //FileUtil.replaceDelimiterFirstNColumnsAndSplitFile(originalFileName, originalFileName, numPartitions);
-            //public static void splitFileInColumns(File origFile, String oldDelimiter, String newDelimiter, int firstNColumns) {
             File origFile = new File(originalFileName);
             //find commas outside double quotes only
             String regex = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
-
+            Map<String, PersonalInfo> personalInfoMap = new HashMap<>();
             
-            FileUtil.splitFileInColumns( origFile, ",", "|", 8,regex);
+            Menu.showMenu(origFile, regex, personalInfoMap);
             
-            
-            
-            
-            
-            exit(1); //stop here to test divide file and replacement of delimiter
-            
-            
-            proyecto.originalFile = new CSVFile(args[0]);
-            if(!CSVFile.isCSVFile(proyecto.originalFile)){
-                logger.warn("File " +proyecto.originalFile.getName() + " is not a CSV file");
-                exit(0);                
-            }
-                
-            //ProyectoFinalProgAvanzada project = new ProyectoFinalProgAvanzada();
-            logger.info("Passed file validations.Proceed! ...");
-            
-            /*
-            try {
-                proyecto.archivos = FileUtil.divideArchivo(proyecto.originalFile , numPartitions);
-            } catch (FileNotFoundException ex) {
-                logger.error(ex.getMessage());
-            }
-            logger.debug("Partition files: ");
-            for(File f: proyecto.archivos){
-                logger.debug("File: "+ f.getName() );
-            }
-            */
+            //FileUtil.splitFileInColumns( origFile, ",", "|", 8,regex); now this is being called from Menu 
+           
         }else{
             logger.info("invalid user input...");
             Validation.showUsage();
@@ -125,11 +97,6 @@ public class ProyectoFinalProgAvanzada{
             exit(1);
         }
         
-        //proyecto.archivos = archivos;
-        
-        
-        logger.info("Exiting main...");
-        
+        logger.info("Exiting main...");   
     }
-
 }

@@ -10,13 +10,30 @@ import util.file.Partition;
 public class Manager {
     Logger logger = LogManager.getLogger(Manager.class);
     
-    int numWorkers;
-    Map<String, PersonalInfo> personalInfoMap;
-    Map<String, EEG> EEGMap;
+    private int numWorkers;
+    private Map<String, PersonalInfo> personalInfoMap;
+    private Map<String, EEG> EEGMap;
 
     public int getNumWorkers() {
         return numWorkers;
     }
+
+    public Map<String, PersonalInfo> getPersonalInfoMap() {
+        return personalInfoMap;
+    }
+
+    public void setPersonalInfoMap(Map<String, PersonalInfo> personalInfoMap) {
+        this.personalInfoMap = personalInfoMap;
+    }
+
+    public Map<String, EEG> getEEGMap() {
+        return EEGMap;
+    }
+
+    public void setEEGMap(Map<String, EEG> EEGMap) {
+        this.EEGMap = EEGMap;
+    }
+    
     
     //private ExecutorService executor;  
     private Builder vtBuilder;

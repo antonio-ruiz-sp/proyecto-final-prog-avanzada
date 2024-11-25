@@ -1,20 +1,72 @@
 package model.worker_manager;
 
-class EEG {
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
+public class EEG {
+    private static Logger logger = LogManager.getLogger(EEG.class);
     String no;
     double[] metrics;
-    
+    //DefaultCategoryDataSet defCatDS;
+    DefaultCategoryDataset defCatDS;   
     
     public EEG(String no, double[] metrics) {
         this.no = no;
         this.metrics = metrics;
+        //this.eegName = "EEG_Elektrot_"+no;
     }
-    void displayGraphics(){
+    public void displayGraphics(){
         
+        logger.debug("Entering displayGraphics");
+        SwingUtilities.invokeLater(() -> {  
+            XYSeries series = new XYSeries("EEG Data");
+            double[] eegReadings = parseEEG("X");
+            for(int i = 0; i< eegReadings.length; i++){
+                series.add(i, eegReadings[i]);
+            }
+                
+            XYSeriesCollection dataset = new XYSeriesCollection(series);  
+            JFreeChart chart = ChartFactory.createXYLineChart(  
+                    "EEG_Elektrot_1",  
+                    "X-Axis",  
+                    "mV",  
+                    dataset,  
+                    PlotOrientation.VERTICAL,  
+                    true,  
+                    true,  
+                    false  
+            );  
+
+            XYPlot plot = chart.getXYPlot();  
+            NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();  
+            yAxis.setRange(-5, 5); // Set the Y-axis range to include negative values  
+
+            ChartPanel chartPanel = new ChartPanel(chart);  
+            JFrame frame = new JFrame("EEG Chart");  
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
+            frame.add(chartPanel);  
+            frame.pack();  
+            frame.setVisible(true);  
+        });  
     }
     
         
     public static double[] parseEEG(String eeg_string) {
+        logger.debug("Entering parseEEG...");
         double[] result = {2.6019423635486465, 3.540371604979485, 0.9609250412751008, -0.4164976930414887, 0.21526728422639177, 
             -0.07165589153210532, -0.3898004112180022, 0.8644281281075242, 1.119118172819912, 1.427344427085588, -0.8843407809833588, 
             -0.6340986855296802, -0.6291372105399154, -2.621901303046682, 1.9370210225890354, -0.07650044270785443, -0.4355146386295813, 
@@ -48,7 +100,7 @@ class EEG {
             0.013281041360747939, 0.1482584216125057, -1.1301160077322805, 0.4048924407293548, -0.7025897725539925, 0.6431538980293657, 0.18087842072549654, -0.5487843394825647, -0.06049325467289124, 0.15933497260178783, -3.062746047722807, 
             -1.5357160376126178, -3.0293782741695994, 0.16280994561697373, -0.855006366008742, -1.540920264850214, 0.9030497431996508, -1.1754486896188927, -0.34916049392676907, 0.17629335639839788, -0.4388223997263195, -0.302852399267824, 
             -0.06907750166813523, 0.8610589750386383, -0.9632512124556527, 0.011203351811018203};
-        
+        logger.debug("double[]  has {} values ", result.length);
         return result;
     }
 }

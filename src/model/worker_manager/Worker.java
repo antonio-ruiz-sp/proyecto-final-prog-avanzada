@@ -1,5 +1,7 @@
 package model.worker_manager;
 
+import model.file_object.EEG;
+import model.file_object.PersonalInfo;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -136,7 +138,7 @@ public class Worker implements Runnable {
                                 }
                                 StringTokenizer piTokenizer = new StringTokenizer(personalInfoStr,"|");
                                 
-                                //TO-DO make this more robuts, as it can easily throw NPE if one of the tokens is null or empty
+                                //TO-DO make this more robust, as it can easily throw NPE if one of the tokens is null or empty
                                 PersonalInfo pi = new PersonalInfo(
                                         piTokenizer.nextToken(), //0-no
                                         piTokenizer.nextToken(), //1-sex

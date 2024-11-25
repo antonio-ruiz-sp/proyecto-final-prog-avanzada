@@ -1,4 +1,4 @@
-package model.worker_manager;
+package model.file_object;
 
 import java.util.Objects;
 

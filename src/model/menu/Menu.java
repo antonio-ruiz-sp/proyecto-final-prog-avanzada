@@ -3,7 +3,7 @@ package model.menu;
 import java.io.File;
 import java.util.Map;
 import java.util.Scanner;
-import model.worker_manager.PersonalInfo;
+import model.file_object.PersonalInfo;
 import util.file.FileUtil;
 
 public class Menu {

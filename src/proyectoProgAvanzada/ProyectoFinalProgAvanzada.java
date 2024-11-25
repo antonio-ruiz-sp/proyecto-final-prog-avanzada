@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import model.menu.Menu;
 import model.statistics.Statistics;
-import model.worker_manager.PersonalInfo;
+import model.file_object.PersonalInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import util.validation.Validation;

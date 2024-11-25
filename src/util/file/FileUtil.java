@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 import model.worker_manager.Manager;
-import model.worker_manager.PersonalInfo;
+import model.file_object.PersonalInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

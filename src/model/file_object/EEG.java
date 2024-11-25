@@ -17,21 +17,24 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 public class EEG {
     private static Logger logger = LogManager.getLogger(EEG.class);
-    String no;
-    double[] metrics;
-    //DefaultCategoryDataSet defCatDS;
-    DefaultCategoryDataset defCatDS;   
+    private String no;
+    private String mainDisorder;
+    private String specificDisorder;
+    private double[] metrics;
+    private DefaultCategoryDataset defCatDS;   
     
-    public EEG(String no, double[] metrics) {
+    public EEG(String no, double[] metrics, String mainDisorder, String specificDisorder) {
         this.no = no;
         this.metrics = metrics;
         //this.eegName = "EEG_Elektrot_"+no;
+        this.mainDisorder = mainDisorder;
+        this.specificDisorder = specificDisorder;
     }
     public void displayGraphics(){
         
         logger.debug("Entering displayGraphics");
         SwingUtilities.invokeLater(() -> {  
-            XYSeries series = new XYSeries("EEG Data");
+            XYSeries series = new XYSeries("EEG Data ["+ mainDisorder +" - "+specificDisorder+"]");
             //double[] eegReadings = parseEEG("X");
             
             for(int i = 0; i< metrics.length; i++){
@@ -78,7 +81,7 @@ public class EEG {
         
         StringTokenizer eeg_values =new StringTokenizer(eeg_string, ",");
         int numValues = eeg_values.countTokens();
-        logger.debug("there are {} comma-separated values in eeg_string", numValues);
+        //logger.debug("there are {} comma-separated values in eeg_string", numValues);
         double[] result = new double[numValues]; //change it so it is the amount of comma-separated values in eeg_string
         int index =0;
         while(eeg_values.hasMoreTokens()){

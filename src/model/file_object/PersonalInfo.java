@@ -26,7 +26,7 @@ public class PersonalInfo {
         this.IQ = IQ;
         this.mainDisorder = mainDisorder;
         this.specificDisorder = specificDisorder;
-        this.firstEEG = new EEG(no,EEG.parseEEG(EEGString));
+        this.firstEEG = new EEG(no,EEG.parseEEG(EEGString),mainDisorder, specificDisorder);
     }
 
     public String getNo() {

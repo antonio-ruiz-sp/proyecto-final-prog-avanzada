@@ -101,6 +101,9 @@ public class Menu {
                         }
                         elektrotsList.add(token);
                     }
+                    //find raw String of EEG
+                    
+                    //Now with common String split work to display EEG
                     elektrotsList.parallelStream().forEach(eegItem->{
                         try {
                             //+++++++++++++++++++++++
@@ -117,8 +120,8 @@ public class Menu {
 
                                     logger.debug("raw string: {} ", eegString);
 
-                                    eegString = eegString.substring(eegString.indexOf("|")+1);
-                                    logger.debug("string after pipe: {}", eegString);
+                                    String eegStringTmp = eegString.substring(eegString.indexOf("]")+1);
+                                    logger.debug("string after pipe: {}", eegStringTmp);
                                     String cleanEEGString = eegString.replaceAll(regex, "|");
                                     logger.debug("string after commas outside double quotes got replaced by pipe : {}", cleanEEGString);
                                     logger.debug("here...");

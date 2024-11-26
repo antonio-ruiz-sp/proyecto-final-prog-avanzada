@@ -47,3 +47,12 @@ src/logs/app.log
 src/poc/ProofOfConcept.java
 src/poc/ProofOfConcept.java
 testfile.txt3
+/lib
+/nbproject
+/nbproject
+/nbproject
+nbproject/build-impl.xml
+nbproject/genfiles.properties
+nbproject/private/private.properties
+nbproject/project.properties
+nbproject/project.xml

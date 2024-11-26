@@ -35,7 +35,6 @@ public class EEG {
         logger.debug("Entering displayGraphics");
         SwingUtilities.invokeLater(() -> {  
             XYSeries series = new XYSeries("EEG Data ["+ mainDisorder +" - "+specificDisorder+"]");
-            //double[] eegReadings = parseEEG("X");
             
             for(int i = 0; i< metrics.length; i++){
                 series.add(i, metrics[i]);
@@ -43,7 +42,7 @@ public class EEG {
                 
             XYSeriesCollection dataset = new XYSeriesCollection(series);  
             JFreeChart chart = ChartFactory.createXYLineChart(  
-                    "EEG_Elektrot_1 ["+this.no+"]",  
+                    "EEG_Elektrot_X ["+this.no+"]",  
                     "X-Axis",  
                     "mV",  
                     dataset,  
@@ -62,6 +61,7 @@ public class EEG {
             frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);  
             frame.add(chartPanel);  
             frame.pack();  
+            frame.setAlwaysOnTop(true);
             frame.setVisible(true);  
         });  
     }
@@ -69,7 +69,7 @@ public class EEG {
         
     public static double[] parseEEG(String eeg_string) {
         //logger.debug("Entering parseEEG...");
-        //logger.debug("eeg_string: {} ", eeg_string);
+        logger.debug("eeg_string: {} ", eeg_string);
         //eeg_string = eeg_string.replace("\"\["], "");
         String regexLeft = "\"[";
         String regexRight = "]\"";

@@ -3,16 +3,16 @@ package model.menu;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-//import java.util.logging.Logger;
 import java.util.stream.Stream;
 import model.file_object.EEG;
 import model.file_object.PersonalInfo;
@@ -95,7 +95,7 @@ public class Menu {
                     List<String> elektrotsList = new ArrayList<>();
                     while(st.hasMoreTokens()){
                         String token =st.nextToken();
-                        logger.debug("token{}: ",token);
+                        logger.debug("token: {} ",token);
                         if(token.equals("1")){
                             currentPi.getFirstEEG().displayGraphics();
                             continue;
@@ -103,37 +103,57 @@ public class Menu {
                         elektrotsList.add(token);
                     }
                     elektrotsList.parallelStream().forEach(eegItem->{
-                try {
-                    //+++++++++++++++++++++++
-                    String eegFileName = piMap.get(record).getFileMappingEEG().get(record);
-                    logger.debug("Obtaining EEG: EEG_Elektrot_"+ eegItem + " of record "+ record +" which is found in: " + eegFileName);
-                    Thread vt = menuVTBuilder.start(()->{
-                        
-                        try(Stream<String> fileStream = Files.lines( Paths.get(eegFileName))) {
-                            
-                            logger.debug("Thread ID: " + Thread.currentThread().threadId());
-                            String eegString =fileStream.filter(l-> l.startsWith(record)).findFirst().get();
-                            logger.debug("eegString found: {}",eegString);
-                            
-                            logger.debug("raw string{} ", eegString);
-                            
-                            eegString = eegString.substring(eegString.indexOf("|")+1);
-                            logger.debug("string after pipe: {}", eegString);
-                            eegString.replaceAll(regex, "|");
-                            logger.debug("string after pipe (should be the list of measuring): {}", eegString);
-                            EEG eeg = new EEG(record, EEG.parseEEG(eegString), currentPi.getMainDisorder(), currentPi.getSpecificDisorder());
-                            eeg.displayGraphics();
-                            //StringTokenizer eegTokenizer = new StringTokenizer(eegString,"|");
-                            //StringTokenizer eegTokenizer = new StringTokenizer();
-                        } catch (IOException ex) {
-                            logger.debug(ex.getMessage());
+                        try {
+                            //+++++++++++++++++++++++
+                            String eegFileName = piMap.get(record).getFileMappingEEG().get(record);
+                            logger.debug("Obtaining EEG: EEG_Elektrot_"+ eegItem + " of record "+ record +" which is found in: " + eegFileName);
+                            Instant begin = Instant.now();
+
+                            Thread vt = menuVTBuilder.start(()->{
+                                try(Stream<String> fileStream = Files.lines( Paths.get(eegFileName))) {
+
+                                    logger.debug("Thread ID: " + Thread.currentThread().threadId());
+                                    String eegString =fileStream.filter(l-> l.startsWith(record)).findFirst().get();
+                                    logger.debug("eegString found!");
+
+                                    logger.debug("raw string: {} ", eegString);
+
+                                    eegString = eegString.substring(eegString.indexOf("|")+1);
+                                    logger.debug("string after pipe: {}", eegString);
+                                    String cleanEEGString = eegString.replaceAll(regex, "|");
+                                    logger.debug("string after commas outside double quotes got replaced by pipe : {}", cleanEEGString);
+                                    logger.debug("here...");
+                                    String[] eegMeasures = cleanEEGString.split("|");
+                                    logger.debug("number of eeg measures should be ~1,140: {}" + eegMeasures.length);
+                                    /*
+                                    StringTokenizer eegReadings = new StringTokenizer(cleanEEGString, "|");
+                                    int countTokens =0;
+                                    while (eegReadings.hasMoreTokens()){
+                                        countTokens++;
+                                    }*/
+                                    List eegMeasuresList = Arrays.asList(eegMeasures);
+                                    //StringTokenizer tokenizer = new StringTokenizer("your string here");  
+                                    Stream<String> tokenStream = eegMeasuresList.stream().map(Object::toString);
+                                    String eegReading = tokenStream.skip(Integer.parseInt(eegItem)-1).findFirst().get();  //findFirst().get();
+                                    logger.debug("eegReading: {}", eegReading);
+                                    EEG eeg = new EEG(record, EEG.parseEEG(eegReading), currentPi.getMainDisorder(), currentPi.getSpecificDisorder());
+                                    eeg.displayGraphics();
+                                    //StringTokenizer eegTokenizer = new StringTokenizer(eegString,"|");
+                                    //StringTokenizer eegTokenizer = new StringTokenizer();
+                                } catch (IOException ex) {
+                                    logger.debug(ex.getMessage());
+                                }
+                            });
+                            vt.join();
+                            Instant end = Instant.now();
+                            //Duration d = Duration.between(begin - end);
+                            Duration duration = Duration.between(begin, end);
+                            logger.info("Duration to complete search, load and graphing: " + duration.toMillis() +" [ms];" + duration.toSeconds()+"[s]; "+ duration.toMinutes()+" [mins].");
+                
+                            //+++++++++++++++++++++++
+                        } catch (InterruptedException ex) {
+                            logger.error( ex.getMessage());
                         }
-                    });
-                    vt.join();
-                    //+++++++++++++++++++++++
-                } catch (InterruptedException ex) {
-                    logger.error( ex.getMessage());
-                }
                     });
                     break;
                 case 4:

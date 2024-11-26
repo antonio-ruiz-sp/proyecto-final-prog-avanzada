@@ -202,6 +202,7 @@ public final class FileUtil {
         
         //find commas outside double quotes only
         String regex = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
+        
         //String output = null;
         String linea = null;
         //File tempFile = new File(fileName);

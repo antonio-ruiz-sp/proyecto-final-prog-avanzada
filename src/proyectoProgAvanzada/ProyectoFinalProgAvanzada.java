@@ -14,6 +14,7 @@ import model.statistics.Statistics;
 import model.file_object.PersonalInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import util.file.FileUtil;
 import util.validation.Validation;
 
 public class ProyectoFinalProgAvanzada{
@@ -42,38 +43,7 @@ public class ProyectoFinalProgAvanzada{
             String originalFileName = args[0];
             
             
-            MainMenuJFrame menu = new MainMenuJFrame();//.setVisible(true);
-            
-            JLabel fileNameLbl = new JLabel("File:");
-            fileNameLbl.setName("fileNameLbl");
-            //JTextField fileNameTxt = new JTextField( originalFileName );
-            JTextField fileNameTxt = new JTextField(originalFileName);
-            fileNameTxt.setName("fileNameTxt");
-            JLabel partitionsLbl = new JLabel("partitions (recommended)");
-            partitionsLbl.setName("partitionsLbl");
-            JTextField partitionsTxt = new JTextField(String.valueOf(proyecto.availableProcessors));
-            partitionsTxt.setName("partitionsTxt");
-            JButton continueProcessFileBtn = new JButton("Continue");
-            continueProcessFileBtn.setName("continueProcessFileBtn");
-            
-            
-            menu.add(fileNameLbl);
-            menu.add(fileNameTxt);
-            menu.add(partitionsLbl);
-            menu.add(partitionsTxt);
-            menu.add(continueProcessFileBtn);
-
-            //menu.setLayout(new javax.swing.GroupLayout(menu));
-            menu.setSize(300,200);
-            menu.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-            menu.setVisible(true);
-            
-            logger.debug("now what?");
-            
-            
-            
-            menu.setVisible(true);
-            //menu.setAlwaysOnTop(true);
+            showvalidation(originalFileName, proyecto);
             
             //logger.debug("menu: "+menu);
             //menu.getcom
@@ -88,11 +58,11 @@ public class ProyectoFinalProgAvanzada{
             //transform file i.e change comma to pipe and keep commas inside double quotes
             File origFile = new File(originalFileName);
             //find commas outside double quotes only
-            String regex = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
-            Map<String, PersonalInfo> personalInfoMap = new HashMap<>();
-            
-            Menu.showMenu(origFile, regex, personalInfoMap);
-            
+            //String regex = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
+            //Map<String, PersonalInfo> personalInfoMap = new HashMap<>();
+            //Map<String, String> fileMappingsEEG = FileUtil.getFileMappingsEEG();
+            Menu menu = new Menu(origFile);
+            menu.showMenu();
             //FileUtil.splitFileInColumns( origFile, ",", "|", 8,regex); now this is being called from Menu 
            
         }else{
@@ -103,5 +73,41 @@ public class ProyectoFinalProgAvanzada{
         }
         
         logger.info("Exiting main...");   
+    }
+
+    private static void showvalidation(String originalFileName, ProyectoFinalProgAvanzada proyecto) {
+        MainMenuJFrame menu = new MainMenuJFrame();//.setVisible(true);
+        
+        JLabel fileNameLbl = new JLabel("File:");
+        fileNameLbl.setName("fileNameLbl");
+        //JTextField fileNameTxt = new JTextField( originalFileName );
+        JTextField fileNameTxt = new JTextField(originalFileName);
+        fileNameTxt.setName("fileNameTxt");
+        fileNameTxt.setText(originalFileName);
+        JLabel partitionsLbl = new JLabel("partitions (recommended)");
+        partitionsLbl.setName("partitionsLbl");
+        JTextField partitionsTxt = new JTextField(String.valueOf(proyecto.availableProcessors));
+        partitionsTxt.setName("partitionsTxt");
+        JButton continueProcessFileBtn = new JButton("Continue");
+        continueProcessFileBtn.setName("continueProcessFileBtn");
+        //continueProcessFileBtn.setA
+        
+        menu.add(fileNameLbl);
+        menu.add(fileNameTxt);
+        menu.add(partitionsLbl);
+        menu.add(partitionsTxt);
+        menu.add(continueProcessFileBtn);
+        
+        //menu.setLayout(new javax.swing.GroupLayout(menu));
+        menu.setSize(300,200);
+        menu.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        menu.setVisible(true);
+        
+        logger.debug("now what?");
+        
+        
+        
+        menu.setVisible(true);
+        //menu.setAlwaysOnTop(true);
     }
 }

@@ -1,5 +1,7 @@
 package model.file_object;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -16,6 +18,8 @@ public class PersonalInfo {
     private String mainDisorder;
     private String specificDisorder;
     private EEG firstEEG;
+    private Map<String,String> fileMappingEEG; //map of record->fileName where EEG string can be found
+    
 
     public PersonalInfo(String no, String sex, int age, String eegDate, String education, int IQ, String mainDisorder, String specificDisorder, String EEGString) {
         this.no = no;
@@ -27,6 +31,7 @@ public class PersonalInfo {
         this.mainDisorder = mainDisorder;
         this.specificDisorder = specificDisorder;
         this.firstEEG = new EEG(no,EEG.parseEEG(EEGString),mainDisorder, specificDisorder);
+        this.fileMappingEEG = new HashMap<>();
     }
 
     public String getNo() {
@@ -100,6 +105,15 @@ public class PersonalInfo {
     public void setFirstEEG(EEG firstEEG) {
         this.firstEEG = firstEEG;
     }
+
+    public Map<String, String> getFileMappingEEG() {
+        return fileMappingEEG;
+    }
+
+    public void setFileMappingEEG(Map<String, String> fileMappingEEG) {
+        this.fileMappingEEG = fileMappingEEG;
+    }
+    
     
 
     @Override

@@ -3,6 +3,7 @@ package model.worker_manager;
 import model.file_object.EEG;
 import model.file_object.PersonalInfo;
 import java.lang.Thread.Builder;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +16,7 @@ public class Manager {
     private int numWorkers;
     private Map<String, PersonalInfo> personalInfoMap;
     private Map<String, EEG> EEGMap;
+    //private Map<String, String> fileMappingsEEG; //keps track of the EEG file "number" where the record is stored
 
     public int getNumWorkers() {
         return numWorkers;
@@ -35,7 +37,16 @@ public class Manager {
     public void setEEGMap(Map<String, EEG> EEGMap) {
         this.EEGMap = EEGMap;
     }
-    
+
+    /*
+    public Map<String, String> getFileMappingsEEG() {
+        return fileMappingsEEG;
+    }
+
+    public void setFileMappingsEEG(Map<String, String> fileMappingsEEG) {
+        this.fileMappingsEEG = fileMappingsEEG;
+    }
+    */
     
     //private ExecutorService executor;  
     private Builder vtBuilder;
@@ -45,6 +56,7 @@ public class Manager {
         vtBuilder = Thread.ofVirtual().name("worker-", 0);
         personalInfoMap = new ConcurrentHashMap<>();
         EEGMap = new ConcurrentHashMap<>();
+        //fileMappingsEEG = new HashMap<>();
         /*
         //executor = Executors.newFixedThreadPool(numberOfWorkers);  
         //executor = Executors.newVirtualThreadPerTaskExecutor();
@@ -74,8 +86,8 @@ public class Manager {
         } catch (InterruptedException ex) {
             logger.error("Exception in submitTask(Partition): " + ex.getMessage());
         }
-        //logger.debug("task "+ vt.getName()+" completed!");
-        
+        logger.debug("task "+ vt.getName()+" completed!");
+        ;
         /*
         //Future<?> f = executor.submit(worker);
         

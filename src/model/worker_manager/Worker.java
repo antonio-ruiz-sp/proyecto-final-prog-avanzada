@@ -29,6 +29,7 @@ public class Worker implements Runnable {
     String regex;
     Map<String, EEG> EEGMap;
     Map<String, PersonalInfo> personalInfoMap;
+    //Map<String, String> fileMappingOfEEGRecords;//maps the EEG's record to the file name
     
     //for nested virtual threading
     private Thread.Builder workerVTBuilder;
@@ -57,6 +58,7 @@ public class Worker implements Runnable {
         this.regex = p.getRegex();
         this.EEGMap = EEGMap;
         this.personalInfoMap = personalInfoMap;
+        //this.fileMappingOfEEGRecords = fileMappingOfEEGRecords;
         workerVTBuilder = Thread.ofVirtual().name("sub-worker"+0);
 
     }
@@ -75,6 +77,7 @@ public class Worker implements Runnable {
         String destFileName = "src/files/output/"+ destFile.getName().split("\\.")[0];
         String destFileNameEEG = destFileName+ "-EEG.csv";
         String destFileNamePersonalInfo = destFileName + "-PersonalInfo.csv";
+        String fileMappingsEEGName = "src/files/output/fileMappingsEEG.csv";
  
         //logger.debug("Start measuring time on: "+taskName);
         Instant begin = Instant.now();
@@ -84,18 +87,13 @@ public class Worker implements Runnable {
             BufferedWriter archivoDestinoPersonal = new BufferedWriter(new FileWriter(destFileNamePersonalInfo));
             BufferedWriter archivoDestinoEEG = new BufferedWriter(new FileWriter(destFileNameEEG));
             Stream<String> fileStream = Files.lines( Paths.get(origFile.getAbsolutePath()));
+            //BufferedWriter fileMappingsEEG = new BufferedWriter(new FileWriter(fileMappingsEEGName,true));
             ProgressBar pb = new ProgressBar(taskName, stop - start) ) {
 
             //fileStream.skip(start).limit(stop-start).parallel().forEach(line-> {
             fileStream.skip(start).limit(stop - start).forEach(line-> {
                 try {
-                    /*
-                    //one worker per partition
-                    String newLine = line.replaceAll(regex, "|");
-                    //logger.debug("new line:" +newLine);
-                    archivoDestinoPersonal.write(newLine+"\n");
-                    pb.step();
-                    */
+                    
                     //one vt per line
                     Thread vt = workerVTBuilder.start(()->{
                         try {
@@ -150,8 +148,13 @@ public class Worker implements Runnable {
                                         piTokenizer.nextToken(), //7-specific.disorder
                                         piTokenizer.nextToken() //8-EEG_Elektrot_1
                                 );
+                                pi.getFileMappingEEG().put(pi.getNo(), destFileNameEEG);//link to the file that contains rest of EEG's
                                 return pi;
                             });
+                            
+                            //keep track of what file contains this EEG record
+                            //fileMappingOfEEGRecords.put(recordNumber, destFileNameEEG);
+                            //fileMappingsEEG.write(recordNumber+"|"+destFileNameEEG+ "\n");
                             newLine = null; //for GC
                             pb.step();
                         } catch (IOException ex) {

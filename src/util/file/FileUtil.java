@@ -25,6 +25,7 @@ public final class FileUtil {
     private static final Logger logger = LogManager.getLogger(FileUtil.class);
     private static final int availableProcessors = Runtime.getRuntime().availableProcessors();
     private static Thread.Builder vtBuilder = Thread.ofVirtual().name("vertical-partition",0);
+    //private static Map<String, String> fileMappingsEEG;
     //public static Manager manager;
 
     public static boolean fileExists(File f){
@@ -58,7 +59,8 @@ public final class FileUtil {
     * 1: A file with the 1,147 row split in first file with newDelimiter as separator
     * 2: A second file with the same 1,147 rows with the complimentary file contents as one line and the primary column duplicated per record
     */    
-    public static Map<String, PersonalInfo> splitFileInColumns(File origFile, String oldDelimiter, String newDelimiter, int firstNColumns, String regex) {
+    public static Map<String, PersonalInfo> splitFileInColumns(File origFile, String oldDelimiter, 
+            String newDelimiter, int firstNColumns, String regex) {
         logger.info("*************************************************************************");
         logger.info("* Entering splitFileInColumns(File origFile, String oldDelimiter, String newDelimiter, int firstNColumns, String regex)");
         logger.debug("*    firstNColumns: " + firstNColumns);
@@ -86,14 +88,16 @@ public final class FileUtil {
         
         //Define the partition plan
         logger.debug("Creating partition plan...");
-        for(int p=0; p < numPartitions ; p++){
+        //for(int p=0; p < numPartitions ; p++){
+        for(int p=0; p < 2 ; p++){
+            
             
             String partName = "partition-"+p;
             // logger.debug("partition name: "+partName);
             Partition partition = new Partition(partName, partStart, (partStart + partitionSizeInLines ), manager, origFile, (destFileName+"-vpart-"+p+".csv"),regex);
             partStart += (partitionSizeInLines + 1);//so next iteration won't overlap with previous partition
             partitionsList.add(partition);      
-            break;
+            //break;
         }
         logger.debug("partition list(plan) ["+partitionsList.size()+" count] : ");
         partitionsList.forEach(p-> logger.debug(p));
@@ -115,6 +119,7 @@ public final class FileUtil {
         Instant end = Instant.now();
         Duration duration = Duration.between(begin, end);
         logger.info("Duration of completing all partitions: " + duration.toMillis() +" [ms];" + duration.toSeconds()+"[s]; "+ duration.toMinutes()+" [mins].");                
+        //fileMappingsEEG = manager.getFileMappingsEEG();
         return manager.getPersonalInfoMap();
     }
     
@@ -262,6 +267,10 @@ public final class FileUtil {
     
     public static String readFirstNonEmptyLine(File f) {
         return readFirstNLinesofFile(f, 1, true)[0];
+    }
+
+    public static Map<String, String> getFileMappingsEEG() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

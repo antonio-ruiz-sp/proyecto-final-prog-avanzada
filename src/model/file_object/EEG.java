@@ -21,14 +21,17 @@ public class EEG {
     private String mainDisorder;
     private String specificDisorder;
     private double[] metrics;
+    private String elektrotNumber; //corresponds to the number of eeg reading
     private DefaultCategoryDataset defCatDS;   
     
-    public EEG(String no, double[] metrics, String mainDisorder, String specificDisorder) {
-        this.no = no;
+    public EEG(String no, double[] metrics, String mainDisorder, String specificDisorder, String eegNumber) {
+        this.no = no; //corresponds to number of record/pacient
         this.metrics = metrics;
         //this.eegName = "EEG_Elektrot_"+no;
         this.mainDisorder = mainDisorder;
         this.specificDisorder = specificDisorder;
+        this.elektrotNumber = eegNumber;
+        
     }
     public void displayGraphics(){
         
@@ -42,7 +45,7 @@ public class EEG {
                 
             XYSeriesCollection dataset = new XYSeriesCollection(series);  
             JFreeChart chart = ChartFactory.createXYLineChart(  
-                    "EEG_Elektrot_X ["+this.no+"]",  
+                    "EEG_Elektrot_"+elektrotNumber+" ["+this.no+"]",  
                     "X-Axis",  
                     "mV",  
                     dataset,  

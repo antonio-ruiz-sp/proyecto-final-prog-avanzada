@@ -8,7 +8,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -136,7 +135,7 @@ public class Menu {
                                     Stream<String> tokenStream = eegMeasuresList.stream().map(Object::toString);
                                     String eegReading = tokenStream.skip(Integer.parseInt(eegItem)-1).findFirst().get();  //findFirst().get();
                                     logger.debug("eegReading: {}", eegReading);
-                                    EEG eeg = new EEG(record, EEG.parseEEG(eegReading), currentPi.getMainDisorder(), currentPi.getSpecificDisorder());
+                                    EEG eeg = new EEG(record, EEG.parseEEG(eegReading), currentPi.getMainDisorder(), currentPi.getSpecificDisorder(),eegItem);
                                     eeg.displayGraphics();
                                     //StringTokenizer eegTokenizer = new StringTokenizer(eegString,"|");
                                     //StringTokenizer eegTokenizer = new StringTokenizer();

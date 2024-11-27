@@ -3,7 +3,6 @@ package model.worker_manager;
 import model.file_object.EEG;
 import model.file_object.PersonalInfo;
 import java.lang.Thread.Builder;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;

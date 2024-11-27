@@ -3,11 +3,6 @@ package model.file_object;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-/**
- *
- * @author antonio.ruiz
- */
 public class PersonalInfo {
     private String no;
     private String sex;

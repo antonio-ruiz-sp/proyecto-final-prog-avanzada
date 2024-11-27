@@ -47,3 +47,7 @@ src/logs/app.log
 src/poc/ProofOfConcept.java
 src/poc/ProofOfConcept.java
 testfile.txt3
+lib/misJars/jline-3.5.1.jar
+/lib
+/nbproject
+/nbproject

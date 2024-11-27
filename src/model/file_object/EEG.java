@@ -17,6 +17,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 public class EEG {
     private static Logger logger = LogManager.getLogger(EEG.class);
+    
     private String no;
     private String mainDisorder;
     private String specificDisorder;
@@ -64,7 +65,7 @@ public class EEG {
             frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);  
             frame.add(chartPanel);  
             frame.pack();  
-            frame.setAlwaysOnTop(true);
+            frame.setAlwaysOnTop(false);
             frame.setVisible(true);  
         });  
     }
@@ -73,7 +74,6 @@ public class EEG {
     public static double[] parseEEG(String eeg_string) {
         //logger.debug("Entering parseEEG...");
         logger.debug("eeg_string: {} ", eeg_string);
-        //eeg_string = eeg_string.replace("\"\["], "");
         String regexLeft = "\"[";
         String regexRight = "]\"";
         //TO-DO try to make into one regex rather than two
@@ -91,8 +91,7 @@ public class EEG {
             String token = eeg_values.nextToken(); 
             result[index++] = Double.parseDouble(token);
         }
-        
-        
+      
         //logger.debug("double[]  has {} values ", result.length);
         return result;
     }

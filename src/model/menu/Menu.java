@@ -1,20 +1,16 @@
 package model.menu;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
 import java.util.stream.Stream;
 import model.file_object.EEG;
 import model.file_object.PersonalInfo;
@@ -28,7 +24,7 @@ public class Menu {
     private Map<String, String> fileMappingsEEG;
     private File origFile;
     private String regex = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
-    private Thread.Builder menuVTBuilder = Thread.ofVirtual().name("menu-worker"+0);
+    private Thread.Builder menuVTBuilder = Thread.ofVirtual().name("menu-worker",0);
 
     private static final Logger logger = LogManager.getLogger(Menu.class);
 
@@ -108,8 +104,8 @@ public class Menu {
                     
                     //Now with common String split work to display EEG
                     elektrotsList.parallelStream().forEach(eegItem->{
-                        try(BufferedWriter EEGLines = new BufferedWriter(new FileWriter("src/files/output/eeglines.csv",true))) {
-                            //+++++++++++++++++++++++
+                        //try(BufferedWriter EEGLines = new BufferedWriter(new FileWriter("src/files/output/eeglines.csv",true))) {
+                        try {
                             String eegFileName = piMap.get(record).getFileMappingEEG().get(record);
                             logger.debug("Obtaining EEG: EEG_Elektrot_"+ eegItem + " of record "+ record +" which is found in: " + eegFileName);
                             Instant begin = Instant.now();
@@ -122,16 +118,16 @@ public class Menu {
                                     logger.debug("eegString found!");
 
                                     logger.debug("raw string: {} ", eegString);
-                                    EEGLines.write(eegString+"\n");
+                                    //EEGLines.write(eegString+"\n");
 
                                     //String eegStringTmp = eegString.substring(eegString.indexOf("]")+1);
                                     eegString = eegString.substring(eegString.indexOf("|")+1);
                                     
                                     logger.debug("string after pipe: {}", eegString);
-                                    EEGLines.write(eegString+"\n");
+                                    //EEGLines.write(eegString+"\n");
                                     //change outside commas por "pipe"
                                     eegString = eegString.replaceAll(regex, "|");
-                                    EEGLines.write(eegString+"\n");
+                                    //EEGLines.write(eegString+"\n");
                                     StringTokenizer eegST = new StringTokenizer(eegString, "|");
                                     int countTokens = 0;
                                     String eegReading = null;
@@ -139,40 +135,19 @@ public class Menu {
                                     while (eegST.hasMoreTokens()){
                                         countTokens++;
                                         eegReading = eegST.nextToken();
-                                        if(countTokens <6){
-                                            logger.debug("eegReading :{}",eegReading);
-                                            EEGLines.write(eegReading+"\n");
-                                        }
+
                                         if(countTokens == Integer.parseInt(eegItem)){
                                             logger.debug("elektrot_{} found: {}",eegItem, eegReading);
                                             break;
-                                        }
-                                            
+                                        }                                            
                                     }
                                     logger.debug("iterated over {}  eegReadings!", countTokens);
                                     //logger.debug("string after commas outside double quotes got replaced by pipe : {}", cleanEEGString);
                                     //EEGLines.write(cleanEEGString+"\n");
-                                    logger.debug("here...");
                                     String[] eegMeasures = eegString.split(",");
-                                    logger.debug("number of eeg measures should be ~1,140: {}" + eegMeasures.length);
-                                    /*
-                                    StringTokenizer eegReadings = new StringTokenizer(cleanEEGString, "|");
-                                    int countTokens =0;
-                                    while (eegReadings.hasMoreTokens()){
-                                        countTokens++;
-                                    }*/
                                     
-                                    /*
-                                    List eegMeasuresList = Arrays.asList(eegMeasures);
-                                    //StringTokenizer tokenizer = new StringTokenizer("your string here");  
-                                    Stream<String> tokenStream = eegMeasuresList.stream().map(Object::toString);
-                                    String eegReading = tokenStream.skip(Integer.parseInt(eegItem)-1).findFirst().get();  //findFirst().get();
-                                    logger.debug("eegReading: {}", eegReading);
-                                    */
                                     EEG eeg = new EEG(record, EEG.parseEEG(eegReading), currentPi.getMainDisorder(), currentPi.getSpecificDisorder(),eegItem);
                                     eeg.displayGraphics();
-                                    //StringTokenizer eegTokenizer = new StringTokenizer(eegString,"|");
-                                    //StringTokenizer eegTokenizer = new StringTokenizer();
                                 } catch (IOException ex) {
                                     logger.debug(ex.getMessage());
                                 }
@@ -183,17 +158,13 @@ public class Menu {
                             Duration duration = Duration.between(begin, end);
                             logger.info("Duration to complete search, load and graphing: " + duration.toMillis() +" [ms];" + duration.toSeconds()+"[s]; "+ duration.toMinutes()+" [mins].");
                 
-                            //+++++++++++++++++++++++
                         } catch (InterruptedException ex) {
                             logger.error( ex.getMessage());
-                        } catch (IOException ex) {
-                    java.util.logging.Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                        }
                     });
                     break;
                 case 4:
                     System.out.println("Exit...");
-                    //TO-DO delete filMappingsEEG.csv, or truncate it
                     
                     System.exit(0);
                 default:
@@ -203,24 +174,4 @@ public class Menu {
         
     }
 
-    /*
-    public Menu(File origFile, String regex) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }*/
-
-/*
-    private static Map<String, String> getEEGMappings() {
-        Map<String, String> result = new HashMap<>();
-        String mappingsFileName = "src/files/output/fileMappingsEEG.csv";
-          
-        
-        try( Stream<String> fileStream = Files.lines( Paths.get(mappingsFileName))) {
-            fileStream.forEach(l-> result.put(l.split("|")[0],l.split("|")[1]));
-        } catch (IOException ex) {
-            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return result;
-    }
-*/
 }

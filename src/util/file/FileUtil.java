@@ -108,14 +108,7 @@ public final class FileUtil {
                 .forEach(p-> {logger.debug("start work: "+p.getPartName());p.startWork();});
         
         //manager.shutdown();
-        
-        //=======================================
-        //Now do work!!!
-        //manager.getPersonalInfoMap().get("2").getFirstEEG().displayGraphics();
-        /*
-        PersonalInfo pi = manager.getPersonalInfoMap().get("2");//.getFirstEEG()
-        pi.getFirstEEG().displayGraphics();
-        */
+    
         Instant end = Instant.now();
         Duration duration = Duration.between(begin, end);
         logger.info("Duration of completing all partitions: " + duration.toMillis() +" [ms];" + duration.toSeconds()+"[s]; "+ duration.toMinutes()+" [mins].");                
@@ -123,20 +116,6 @@ public final class FileUtil {
         return manager.getPersonalInfoMap();
     }
     
-
-    public static void replaceDelimiterFirstNColumnsAndSplitFile(File origFile, String oldDelimiter, String newDelimiter, int firstNColumns){
-        logger.info("*************************************************************************");
-        logger.info("* Entering replaceDelimiterFirstNColumns(File origFile, String oldDelimiter, String newDelimiter, int numTimes)");
-        logger.debug("*    numTimes: " + firstNColumns);
-        logger.debug("*oldDelimiter: " + oldDelimiter);
-        logger.debug("*   file Name: " + origFile.getAbsolutePath());
-        logger.info("*************************************************************************");
-        String destFileName = "src/files/output/"+ origFile.getName().split("\\.")[0];
-        logger.debug("destination file name: " + destFileName);
-        
-        
-
-    }
     
     public static void replaceDelimiterInCSVFile(File origFile, String oldDelimiter, 
             String newDelimiter, boolean skipDelimiterInsideDoubleQuotes, 
@@ -149,11 +128,6 @@ public final class FileUtil {
         logger.debug("* Orig File Name: " + origFile.getAbsolutePath());
         logger.info("*************************************************************************");
 
-        
-        
-        //File destFile = new File(destFileName);
-        
-        
         
         long parFileSizeInLines = -1;//numLines(origFile);
         Instant start_replace = Instant.now();

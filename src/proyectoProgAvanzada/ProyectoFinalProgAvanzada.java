@@ -43,7 +43,7 @@ public class ProyectoFinalProgAvanzada{
             String originalFileName = args[0];
             
             
-            showvalidation(originalFileName, proyecto);
+            //showvalidation(originalFileName, proyecto);
             
             //logger.debug("menu: "+menu);
             //menu.getcom
@@ -76,6 +76,7 @@ public class ProyectoFinalProgAvanzada{
     }
 
     private static void showvalidation(String originalFileName, ProyectoFinalProgAvanzada proyecto) {
+       
         MainMenuJFrame menu = new MainMenuJFrame();//.setVisible(true);
         
         JLabel fileNameLbl = new JLabel("File:");
